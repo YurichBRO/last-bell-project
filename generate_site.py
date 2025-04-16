@@ -1,10 +1,8 @@
 import os
-from jinja2 import Template
 
 # Настройки (можно изменять)
 SETTINGS = {
     "input": {
-        "kids_photos": "детские_фото",
         "adults_photos": "взрослые_фото",
         "captions": "подписи"
     },
@@ -19,15 +17,14 @@ def find_files(base_folder, extension):
 
 def load_data():
     # Загружаем данные из папок
-    kids = find_files(SETTINGS['input']['kids_photos'], '.jpg')
     adults = find_files(SETTINGS['input']['adults_photos'], '.jpg')
     captions = find_files(SETTINGS['input']['captions'], '.txt')
     
     # Создаем список учеников
     students = []
-    for name in kids:
-        if name not in adults or name not in captions:
-            print(f"Пропущен: {name} (не хватает данных)")
+    for name in adults:
+        if name not in captions:
+            print(f"Пропущен: {name} (нет подписи)")
             continue
         
         with open(captions[name], 'r', encoding='utf-8') as f:
@@ -36,7 +33,6 @@ def load_data():
         students.append({
             "name": name,
             "filename": name.replace(" ", "_"),  # Заменяем пробелы на подчеркивания
-            "kid_photo": os.path.basename(kids[name]),
             "adult_photo": os.path.basename(adults[name]),
             "caption": caption
         })
@@ -44,40 +40,42 @@ def load_data():
     return students
 
 def generate_pages(students):
-    # Шаблон для страницы ученика
-    student_template = Template("""
+    # Генерируем страницы для каждого ученика
+    for student in students:
+        html_content = f"""
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ student.name }}</title>
+    <title>{student['name']}</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-        img { max-width: 100%; height: auto; margin: 10px; }
-        a { display: inline-block; margin-top: 20px; text-decoration: none; color: blue; }
+        body {{ font-family: Arial, sans-serif; text-align: center; margin: 20px; }}
+        img {{ max-width: 100%; height: auto; margin: 10px; }}
+        a {{ display: inline-block; margin-top: 20px; text-decoration: none; color: blue; }}
     </style>
 </head>
 <body>
-    <h1>{{ student.name }}</h1>
-    <img src="{{ student.kid_photo }}" alt="{{ student.name }} (1 класс)">
-    <img src="{{ student.adult_photo }}" alt="{{ student.name }} (11 класс)">
-    <p>{{ student.caption }}</p>
+    <h1>{student['name']}</h1>
+    <img src="{student['adult_photo']}" alt="{student['name']}">
+    <p>{student['caption']}</p>
     <a href="index.html">На главную</a>
 </body>
 </html>
-    """)
-    
-    # Генерируем страницы для каждого ученика
-    for student in students:
+"""
         output_path = f"{student['filename']}.html"
         with open(output_path, 'w', encoding='utf-8') as f:
-            f.write(student_template.render(student=student))
+            f.write(html_content)
         print(f"Создана страница: {student['filename']}.html")
 
 def generate_index(students):
-    # Шаблон для главной страницы
-    index_template = Template("""
+    # Генерируем главную страницу
+    student_links = "\n".join(
+        f'        <li><a href="{student["filename"]}.html">{student["name"]}</a></li>'
+        for student in students
+    )
+    
+    html_content = f"""
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -85,27 +83,23 @@ def generate_index(students):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ученики</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-        ul { list-style: none; padding: 0; }
-        li { margin: 10px 0; }
-        a { text-decoration: none; color: blue; font-size: 18px; }
+        body {{ font-family: Arial, sans-serif; text-align: center; margin: 20px; }}
+        ul {{ list-style: none; padding: 0; }}
+        li {{ margin: 10px 0; }}
+        a {{ text-decoration: none; color: blue; font-size: 18px; }}
     </style>
 </head>
 <body>
     <h1>Наши ученики</h1>
     <ul>
-        {% for student in students %}
-        <li><a href="{{ student.filename }}.html">{{ student.name }}</a></li>
-        {% endfor %}
+{student_links}
     </ul>
 </body>
 </html>
-    """)
-    
-    # Генерируем главную страницу
+"""
     output_path = SETTINGS['output']['index_file']
     with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(index_template.render(students=students))
+        f.write(html_content)
     print("Создана главная страница: index.html")
 
 if __name__ == "__main__":
