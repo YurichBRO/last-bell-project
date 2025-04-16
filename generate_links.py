@@ -24,12 +24,12 @@ def generate_links():
     
     # Генерируем ссылки для каждого ученика
     for name in kids:
-        # Формируем имя файла для ссылки
-        link_filename = f"{name.replace(' ', '_')}.txt"  # Заменяем пробелы на подчеркивания
+        # Формируем имя файла для ссылки (оставляем пробелы)
+        link_filename = f"{name}.txt"  # Имя файла с пробелами
         link_path = os.path.join(SETTINGS['output']['links_folder'], link_filename)
         
         # Формируем полную ссылку
-        student_page = f"{name.replace(' ', '_')}.html"  # Имя HTML-страницы ученика
+        student_page = f"{name.replace(' ', '_')}.html"  # Имя HTML-страницы ученика (с подчеркиваниями)
         full_url = SETTINGS['output']['base_url'] + student_page
         
         # Сохраняем ссылку в файл

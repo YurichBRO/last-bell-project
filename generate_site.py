@@ -57,7 +57,7 @@ def generate_pages(students):
 </head>
 <body>
     <h1>{student['name']}</h1>
-    <img src="{student['adult_photo']}" alt="{student['name']}">
+    <img src="{SETTINGS['input']['adults_photos']}/{student['adult_photo']}" alt="{student['name']}">
     <p>{student['caption']}</p>
     <a href="index.html">На главную</a>
 </body>
@@ -71,7 +71,7 @@ def generate_pages(students):
 def generate_index(students):
     # Генерируем главную страницу
     student_links = "\n".join(
-        f'        <li><a href="{SETTINGS['input']['adults_photos']}/{student["filename"]}.html">{student["name"]}</a></li>'
+        f'        <li><a href="{student["filename"]}.html">{student["name"]}</a></li>'
         for student in students
     )
     
