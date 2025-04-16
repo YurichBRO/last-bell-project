@@ -3,7 +3,7 @@ import os
 # Настройки (можно изменять)
 SETTINGS = {
     "input": {
-        "adults_photos": "взрослые_фото",
+        "adults_photos": "взрослые_фото",  # Папка с фотографиями взрослых учеников
         "captions": "подписи"
     },
     "output": {
@@ -33,7 +33,7 @@ def load_data():
         students.append({
             "name": name,
             "filename": name.replace(" ", "_"),  # Заменяем пробелы на подчеркивания
-            "adult_photo": os.path.basename(adults[name]),
+            "adult_photo": os.path.join(SETTINGS['input']['adults_photos'], os.path.basename(adults[name])),
             "caption": caption
         })
     
@@ -50,14 +50,47 @@ def generate_pages(students):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{student['name']}</title>
     <style>
-        body {{ font-family: Arial, sans-serif; text-align: center; margin: 20px; }}
-        img {{ max-width: 100%; height: auto; margin: 10px; }}
-        a {{ display: inline-block; margin-top: 20px; text-decoration: none; color: blue; }}
+        body {{
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+        }}
+        img {{
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }}
+        a {{
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: blue;
+            font-size: 18px;
+        }}
+        p {{
+            font-size: 16px;
+            color: #333;
+        }}
+        @media (max-width: 600px) {{
+            img {{
+                width: 90%;
+            }}
+        }}
     </style>
 </head>
 <body>
     <h1>{student['name']}</h1>
-    <img src="{SETTINGS['input']['adults_photos']}/{student['adult_photo']}" alt="{student['name']}">
+    <img src="{student['adult_photo']}" alt="{student['name']} (11 класс)">
     <p>{student['caption']}</p>
     <a href="index.html">На главную</a>
 </body>
@@ -83,10 +116,35 @@ def generate_index(students):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ученики</title>
     <style>
-        body {{ font-family: Arial, sans-serif; text-align: center; margin: 20px; }}
-        ul {{ list-style: none; padding: 0; }}
-        li {{ margin: 10px 0; }}
-        a {{ text-decoration: none; color: blue; font-size: 18px; }}
+        body {{
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+        }}
+        ul {{
+            list-style: none;
+            padding: 0;
+        }}
+        li {{
+            margin: 10px 0;
+        }}
+        a {{
+            text-decoration: none;
+            color: blue;
+            font-size: 18px;
+        }}
+        @media (max-width: 600px) {{
+            a {{
+                font-size: 16px;
+            }}
+        }}
     </style>
 </head>
 <body>

@@ -6,14 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Иванов Иван Иванович</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-        img { max-width: 100%; height: auto; margin: 10px; }
-        a { display: inline-block; margin-top: 20px; text-decoration: none; color: blue; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: blue;
+            font-size: 18px;
+        }
+        p {
+            font-size: 16px;
+            color: #333;
+        }
+        @media (max-width: 600px) {
+            img {
+                width: 90%;
+            }
+        }
     </style>
 </head>
 <body>
     <h1>Иванов Иван Иванович</h1>
-    <img src="взрослые_фото/Иванов Иван Иванович.jpg" alt="Иванов Иван Иванович">
+    <img src="взрослые_фото\Иванов Иван Иванович.jpg" alt="Иванов Иван Иванович (11 класс)">
     <p>Марк был хороший</p>
     <a href="index.html">На главную</a>
 </body>
