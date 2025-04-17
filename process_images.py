@@ -10,8 +10,7 @@ SETTINGS = {
     "output": {
         "kids_photos": "детские_фото",
         "adults_photos": "взрослые_фото",
-        "size": (800, 600),  # Желаемый размер фото (ширина, высота)
-        "padding": 20  # Отступ при масштабировании
+        "size": (800, 600)  # Желаемый размер фото (ширина, высота)
     }
 }
 
@@ -24,30 +23,33 @@ def process_image(input_path, output_path, target_size):
         # Открываем изображение
         img = Image.open(input_path)
         
-        # Масштабируем с сохранением пропорций
         target_width, target_height = target_size
         img_ratio = img.width / img.height
         target_ratio = target_width / target_height
         
+        # Определяем новые размеры для масштабирования
         if img_ratio > target_ratio:
-            # Широкое изображение - масштабируем по ширине
-            new_width = target_width
-            new_height = int(target_width / img_ratio)
-        else:
-            # Высокое изображение - масштабируем по высоте
+            # Широкое изображение: масштабируем по высоте до target_height
             new_height = target_height
-            new_width = int(target_height * img_ratio)
+            new_width = int(img.width * (new_height / img.height))
+        else:
+            # Узкое изображение: масштабируем по ширине до target_width
+            new_width = target_width
+            new_height = int(img.height * (new_width / img.width))
         
         img_resized = img.resize((new_width, new_height), Image.LANCZOS)
         
-        # Создаем финальное изображение с фоном
-        final_img = Image.new('RGB', target_size, (255, 255, 255))
-        pos_x = (target_width - new_width) // 2
-        pos_y = (target_height - new_height) // 2
-        final_img.paste(img_resized, (pos_x, pos_y))
+        # Вычисляем координаты обрезки
+        left = (new_width - target_width) // 2
+        top = (new_height - target_height) // 2
+        right = left + target_width
+        bottom = top + target_height
+        
+        # Обрезаем изображение
+        img_cropped = img_resized.crop((left, top, right, bottom))
         
         # Сохраняем результат
-        final_img.save(output_path)
+        img_cropped.save(output_path)
         print(f"Обработано: {output_path}")
     
     except Exception as e:

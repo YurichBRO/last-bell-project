@@ -7,7 +7,7 @@ SETTINGS = {
     },
     "output": {
         "links_folder": "ссылки",  # Папка для сохранения ссылок
-        "base_url": "https://yurichbro.github.io/last-bell-project/"  # Базовый URL сайта
+        "base_url": "https://yur-itch.github.io/last-bell-project/"  # Базовый URL сайта
     }
 }
 

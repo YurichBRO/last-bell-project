@@ -82,7 +82,7 @@ def process_images():
             final_img.paste(qr_img, (qr_pos_x, qr_pos_y))
             
             # Сохраняем результат
-            output_path = os.path.join(SETTINGS['output']['folder'], f"{name}_qr.jpg")
+            output_path = os.path.join(SETTINGS['output']['folder'], f"{name}.jpg")
             final_img.save(output_path)
             print(f"Обработано: {name}")
         
