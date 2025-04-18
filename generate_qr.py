@@ -1,7 +1,6 @@
 import os
 from PIL import Image
 import qrcode
-import requests
 
 # Настройки (можно изменять)
 SETTINGS = {
@@ -11,8 +10,8 @@ SETTINGS = {
     },
     "output": {
         "folder": "готовые_фото",
-        "qr_position": (20, 20),  # Отступ QR-кода от правого нижнего угла
-        "qr_size": 100  # Размер стороны QR-кода (уменьшен)
+        "qr_position": (0, 0),  # Отступ QR-кода от правого нижнего угла
+        "qr_size": 125  # Размер стороны QR-кода (уменьшен)
     },
     "bitly": {
         "api_key": "d75c67f64c084b81b63c5104e98c36ba026d9911",
@@ -23,22 +22,6 @@ SETTINGS = {
 def find_files(base_folder, extension):
     return {os.path.splitext(f)[0]: os.path.join(base_folder, f) 
             for f in os.listdir(base_folder) if f.endswith(extension)}
-
-def shorten_url(long_url):
-    headers = {
-        "Authorization": f"Bearer {SETTINGS['bitly']['api_key']}",
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "long_url": long_url,
-        "domain": "bit.ly"
-    }
-    response = requests.post(SETTINGS['bitly']['base_url'], json=payload, headers=headers)
-    if response.status_code == 200 or response.status_code == 201:
-        return response.json().get("link")
-    else:
-        print(f"Ошибка сокращения ссылки: {response.status_code}, {response.text}")
-        return long_url  # Возвращаем оригинальную ссылку, если не удалось сократить
 
 def process_images():
     os.makedirs(SETTINGS['output']['folder'], exist_ok=True)
@@ -59,14 +42,9 @@ def process_images():
             with open(links[name], 'r', encoding='utf-8') as f:
                 link = f.read().strip()
             
-            # Сокращаем ссылку через Bitly
-            short_link = shorten_url(link)
-            if short_link != link:
-                print(f"Сокращена ссылка: {link} -> {short_link}")
-            
             # Генерируем QR-код
             qr = qrcode.QRCode(box_size=5)
-            qr.add_data(short_link)
+            qr.add_data(link)
             qr_img = qr.make_image(fill_color="black", back_color="white")
             qr_img = qr_img.resize((SETTINGS['output']['qr_size'],)*2)
             

@@ -1,4 +1,5 @@
 import os
+from shorten import shorten_url
 
 # Настройки (можно изменять)
 SETTINGS = {
@@ -32,11 +33,13 @@ def generate_links():
         student_page = f"{name.replace(' ', '_')}.html"  # Имя HTML-страницы ученика (с подчеркиваниями)
         full_url = SETTINGS['output']['base_url'] + student_page
         
+        short_url = shorten_url(full_url)
+        
         # Сохраняем ссылку в файл
         with open(link_path, 'w', encoding='utf-8') as f:
-            f.write(full_url)
+            f.write(short_url)
         
-        print(f"Создана ссылка: {link_path} -> {full_url}")
+        print(f"Создана ссылка: {link_path} -> {short_url}")
 
 if __name__ == "__main__":
     generate_links()
