@@ -30,6 +30,17 @@ def load_data():
         with open(captions[name], 'r', encoding='utf-8') as f:
             caption = f.read().strip()
         
+        # Форматируем цитату
+        if not caption:
+            last_name = name.split()[0]
+            if last_name[-1] == 'а':
+                caption = "Воздержалась"
+            else:
+                caption = "Воздержался"
+            caption += " от подписи"
+        else:
+            caption = f'<span class="quote-sign">«</span>{caption}<span class="quote-sign">»</span>'
+        
         students.append({
             "name": name,
             "filename": name.replace(" ", "_"),  # Заменяем пробелы на подчеркивания
