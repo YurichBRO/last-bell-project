@@ -32,12 +32,7 @@ def load_data():
         
         # Форматируем цитату
         if not caption:
-            last_name = name.split()[0]
-            if last_name[-1] == 'а':
-                caption = "Воздержалась"
-            else:
-                caption = "Воздержался"
-            caption += " от подписи"
+            caption = ""
         else:
             caption = f'<span class="quote-sign">«</span>{caption}<span class="quote-sign">»</span>'
         
